@@ -1,0 +1,7 @@
+# requirements.txt
+
+
+django==5.2.1
+django-storages==1.14.6
+boto3==1.38.13
+python-dotenv==1.1.0

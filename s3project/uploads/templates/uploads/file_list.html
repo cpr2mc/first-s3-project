@@ -1,0 +1,26 @@
+{% extends 'uploads/base.html' %}
+
+{% block title %}My Files{% endblock %}
+
+{% block content %}
+    <h2>My Uploaded Files</h2>
+    {% if files %}
+        <div class="file-list">
+            {% for file in files %}
+                <div class="file-item">
+                    <a href="{{ file.file.url }}">{{ file.title }}</a>
+                    <div class="file-date">uploaded on: {{ file.uploaded_at }}</div>
+                    <!-- <div class="file-date">uploaded on: {{ file.uploaded_at|date:"F j, Y, g:i a" }}</div> -->
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You haven't uploaded any files yet.</p>
+    {% endif %}
+
+    <div style="margin-top:20px;">
+        <a href="{% url 'upload_file' %}">
+            <button>Upload New File</button>
+        </a>
+    </div>
+{% endblock %}

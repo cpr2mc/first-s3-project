@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.so
+
+# Virtual Environment
+myvenv/
+env/
+venv/
+
+# Environment Variables
+.env
+
+# Django Stuff
+*.sqlite3
+db.sqlite3
+*.log
+
+# VSCode
+.vscode/
+
+# OS Stuff
+.DS_Store
+Thumbs.db
+
+# Pipenv/Poetry (optional if you're not using them)
+Pipfile
+Pipfile.lock
+poetry.lock
+
+# AWS credentials (if ever saved locally — strongly discouraged)
+*.pem
+.aws/
