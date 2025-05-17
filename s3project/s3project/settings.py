@@ -30,7 +30,9 @@ SECRET_KEY = 'django-insecure-t2s0p+4!*!@s_fn06#q57%swh&52-!lgu47%oc(@axzz0i+@b!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '.veru.io'
+    ]
 
 
 # Application definition
