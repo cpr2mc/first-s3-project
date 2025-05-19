@@ -1,2 +1,2 @@
-web: cd s3project && gunicorn s3project.wsgi
-release: cd s3project && python manage.py migrate
+web: gunicorn --chdir s3project s3project.wsgi
+release: python s3project/manage.py migrate
