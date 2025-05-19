@@ -1,0 +1,54 @@
+{% extends 'uploads/base.html' %}
+
+{% block title %}Invitation Created{% endblock %}
+
+{% block content %}
+    <h2>{% if is_resend %}Invitation Renewed{% else %}Invitation Created{% endif %}</h2>
+    
+    <div class="success-message" style="margin-bottom: 20px; background-color: #d4edda; padding: 10px; border-radius: 4px;">
+        {% if is_resend %}
+        <p>The invitation for <strong>{{ invitation.email }}</strong> has been renewed and is valid until {{ invitation.expires_at|date:"F j, Y" }}.</p>
+        {% else %}
+        <p>Invitation created successfully for <strong>{{ invitation.email }}</strong>.</p>
+        {% endif %}
+    </div>
+    
+    <div class="invitation-details" style="margin-bottom: 30px;">
+        <h3>Invitation Link</h3>
+        <p>Copy and paste the link below into an email or message to send to the user:</p>
+        
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 4px; margin-top: 10px; word-break: break-all;">
+            <code id="invitation-url">{{ invitation_url }}</code>
+        </div>
+        
+        <button onclick="copyToClipboard()" style="margin-top: 10px;">Copy Link</button>
+        
+        <div class="invitation-info" style="margin-top: 20px;">
+            <p><strong>Email:</strong> {{ invitation.email }}</p>
+            <p><strong>Expires on:</strong> {{ invitation.expires_at|date:"F j, Y" }}</p>
+            <p style="color: #6c757d;"><em>Don't forget to manually send this link to the user.</em></p>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <a href="{% url 'create_invitation' %}">
+                <button type="button">Create Another Invitation</button>
+            </a>
+            <a href="{% url 'invitation_list' %}" style="margin-left: 10px;">
+                <button type="button">Return to Invitation List</button>
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        function copyToClipboard() {
+            const urlText = document.getElementById('invitation-url');
+            const textArea = document.createElement('textarea');
+            textArea.value = urlText.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Invitation link copied to clipboard!');
+        }
+    </script>
+{% endblock %}

@@ -54,12 +54,15 @@
 </head>
 <body>
     <div class="nav">
-        <h1>Cardinal Data</h1>
+        <h1>Veru</h1>
     </div>
     <div>
         {% if user.is_authenticated %}
             <a href="{% url 'file_list' %}">My Files</a>
             <a href="{% url 'upload_file' %}">Upload</a>
+            {% if user.is_superuser %}
+                <a href="{% url 'invitation_list' %}">Manage Invitations</a>
+            {% endif %}
             <form method="POST" action="{% url 'logout' %}" style="display:inline;">
                 {% csrf_token %}
                 <button type="submit" style="display:inline;">

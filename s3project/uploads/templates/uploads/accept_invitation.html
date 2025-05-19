@@ -1,0 +1,74 @@
+{% extends 'uploads/base.html' %}
+
+{% block title %}Create Your Account{% endblock %}
+
+{% block content %}
+    <h2>Create Your Account</h2>
+    
+    <p>You've been invited to join our platform. Please complete the registration form below to create your account.</p>
+    
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.invitation_token }}
+        
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}">Email:</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="form-error">{{ form.email.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Username:</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="form-error">{{ form.username.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.first_name.id_for_label }}">First Name:</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+                <div class="form-error">{{ form.first_name.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+                <div class="form-error">{{ form.last_name.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.password1.id_for_label }}">Password:</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                <div class="form-error">{{ form.password1.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <div class="form-error">{{ form.password2.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button type="submit">Create Account</button>
+        </div>
+    </form>
+{% endblock %}

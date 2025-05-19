@@ -1,0 +1,82 @@
+{% extends 'uploads/base.html' %}
+
+{% block title %}Manage Invitations{% endblock %}
+
+{% block content %}
+    <h2>Manage Invitations</h2>
+    
+    <div style="margin-bottom: 20px;">
+        <a href="{% url 'create_invitation' %}" class="btn">
+            <button>Create New Invitation</button>
+        </a>
+    </div>
+    
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <!-- message tags in class? -->
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if invitations %}
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Email</th>
+                    <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Status</th>
+                    <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Created</th>
+                    <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Expires</th>
+                    <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for invitation in invitations %}
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ invitation.email }}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+                            {% if invitation.is_accepted %}
+                                <span style="color: green;">Accepted</span>
+                            {% elif invitation.is_expired %}
+                                <span style="color: red;">Expired</span>
+                            {% else %}
+                                <span style="color: blue;">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ invitation.created_at|date:"M d, Y" }}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ invitation.expires_at|date:"M d, Y" }}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+                            {% if not invitation.is_accepted and not invitation.is_expired %}
+                                <a href="{% url 'resend_invitation' invitation.id %}" 
+                                   style="text-decoration: none; margin-right: 10px; color: blue;">
+                                   Resend
+                                </a>
+                                <a href="{% url 'cancel_invitation' invitation.id %}" 
+                                   style="text-decoration: none; color: red;"
+                                   onclick="return confirm('Are you sure you want to cancel this invitation?')">
+                                   Cancel
+                                </a>
+                            {% elif invitation.is_expired and not invitation.is_accepted %}
+                                <a href="{% url 'resend_invitation' invitation.id %}" 
+                                   style="text-decoration: none; color: blue;">
+                                   Renew & Get Link
+                                </a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No invitations have been created yet.</p>
+    {% endif %}
+    
+    <div style="margin-top: 20px;">
+        <a href="{% url 'file_list' %}" class="btn">
+            <button>Back to Files</button>
+        </a>
+    </div>
+{% endblock %}
