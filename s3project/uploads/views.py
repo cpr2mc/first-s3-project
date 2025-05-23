@@ -240,27 +240,6 @@ def user_projects(request):
     
     return render(request, 'uploads/user_projects.html', {'projects': projects})
 
-
-# @login_required
-# def file_list(request):
-#     files = UploadedFile.objects.filter(user=request.user).order_by('-uploaded_at')
-#     return render(request, 'uploads/file_list.html', {'files': files})
-
-# @login_required
-# def upload_file(request):
-#     if request.method == 'POST':
-#         form = FileUploadForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             file_instance = form.save(commit=False)
-#             file_instance.user = request.user
-#             file_instance.save()
-#             return redirect('file_list')
-#     else:
-#         form = FileUploadForm()
-    
-#     return render(request, 'uploads/upload_file.html', {'form': form})
-
-
 #File Management Views
 @login_required
 def delete_file(request, file_id):
