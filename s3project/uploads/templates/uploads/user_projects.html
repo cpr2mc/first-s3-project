@@ -1,0 +1,59 @@
+{% extends 'uploads/base.html' %}
+
+{% block title %}My Projects{% endblock %}
+
+{% block content %}
+    <h2>My Projects</h2>
+    
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if user.is_superuser %}
+        <div class="action-bar">
+            <a href="{% url 'create_project' %}">
+                <button>Create New Project</button>
+            </a>
+        </div>
+    {% endif %}
+    
+    {% if projects %}
+        <div class="project-grid">
+            {% for project in projects %}
+                <div class="project-card">
+                    <h4><a href="{% url 'project_detail' project.id %}">{{ project.name }}</a></h4>
+                    <p class="project-meta">
+                        Created by {{ project.created_by.get_full_name|default:project.created_by.username }} 
+                        on {{ project.created_at|date:"M d, Y" }}
+                    </p>
+                    <p class="project-description">
+                        {% if project.description %}
+                            {{ project.description|truncatechars:100 }}
+                        {% else %}
+                            <em>No description</em>
+                        {% endif %}
+                    </p>
+                    <div class="project-footer">
+                        <span>{{ project.member_count }} member{{ project.member_count|pluralize }}</span>
+                        <span>{{ project.files.count }} file{{ project.files.count|pluralize }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You don't have any projects yet.</p>
+        {% if user.is_superuser %}
+            <a href="{% url 'create_project' %}">Create your first project</a>
+        {% endif %}
+    {% endif %}
+    
+    <div class="back-link">
+        <a href="{% url 'dashboard' %}">
+            <button>Back to Dashboard</button>
+        </a>
+    </div>
+{% endblock %}

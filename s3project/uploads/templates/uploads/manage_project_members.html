@@ -1,0 +1,93 @@
+{% extends 'uploads/base.html' %}
+
+{% block title %}Manage Project Members{% endblock %}
+
+{% block content %}
+    <h2>Manage Members for {{ project.name }}</h2>
+    
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <div class="project-section">
+        <h3>Current Members</h3>
+        {% if current_members %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Added On</th>
+                        <th>Added By</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for membership in current_members %}
+                        <tr>
+                            <td>
+                                {{ membership.user.get_full_name|default:membership.user.username }}
+                                {% if membership.user == project.created_by %}
+                                    <span class="member-badge">Creator</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ membership.added_at|date:"M d, Y" }}</td>
+                            <td>{{ membership.added_by.get_full_name|default:membership.added_by.username }}</td>
+                            <td>
+                                {% if membership.user != project.created_by %}
+                                    <a href="{% url 'remove_project_member' project.id membership.user.id %}" class="action-link danger">
+                                        Remove
+                                    </a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No members in this project yet.</p>
+        {% endif %}
+    </div>
+    
+    <div class="project-section">
+        <h3>Add Members</h3>
+        
+        {% if form.users.field.queryset.exists %}
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label>{{ form.users.label }}:</label>
+                    <ul class="checkbox-list">
+                        {% for checkbox in form.users %}
+                            <li>
+                                {{ checkbox.tag }} 
+                                <label for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% if form.users.errors %}
+                        <div class="form-error">{{ form.users.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit">Add Selected Users</button>
+                </div>
+            </form>
+        {% else %}
+            <p>No eligible users to add. All active users are already members of this project.</p>
+        {% endif %}
+    </div>
+    
+    <div class="back-link">
+        <a href="{% url 'project_detail' project.id %}">
+            <button>Back to Project</button>
+        </a>
+    </div>
+{% endblock %}

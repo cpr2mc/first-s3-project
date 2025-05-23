@@ -1,0 +1,20 @@
+{% extends 'uploads/base.html' %}
+
+{% block title %}Delete Project{% endblock %}
+
+{% block content %}
+    <h2>Confirm Project Deletion</h2>
+    
+    <div class="confirmation-box">
+        <p>Are you sure you want to delete the project <strong>{{ project.name }}</strong>?</p>
+        <p class="warning"><strong>Warning:</strong> This will permanently delete all files in this project. This action cannot be undone.</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="danger">Delete Project</button>
+            <a href="{% url 'project_detail' project.id %}">
+                <button type="button">Cancel</button>
+            </a>
+        </form>
+    </div>
+{% endblock %}

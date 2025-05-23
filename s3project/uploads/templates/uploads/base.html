@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}S3 File Upload{% endblock %}</title>
+    <title>{% block title %}Veru{% endblock %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            line-height: 1.5;
         }
         .nav {
             display: flex;
@@ -21,20 +20,31 @@
         .nav a {
             text-decoration: none;
             margin-left: 15px;
+            color: #0366d6;
         }
-        .file-list {
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        .content {
             margin-top: 20px;
         }
-        .file-item {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
+        .file-list, .project-grid, .member-list {
+            margin-top: 20px;
         }
-        .file-item:hover {
+        .file-item, .member-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .file-item:hover, .member-item:hover {
             background-color: #f9f9f9;
         }
-        .file-date {
-            color: #888;
-            font-size: 0.8em;
+        .file-date, .member-info, .project-meta, .file-meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
         }
         .form-group {
             margin-bottom: 15px;
@@ -42,41 +52,212 @@
         label {
             display: block;
             margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="email"], input[type="password"], textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
         button {
             padding: 8px 15px;
-            background-color: #4CAF50;
+            background-color: #0366d6;
             color: white;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button.danger {
+            background-color: #dc3545;
+        }
+        button.danger:hover {
+            background-color: #c82333;
+        }
+        .messages {
+            margin-bottom: 20px;
+        }
+        .message {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .project-card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            transition: box-shadow 0.3s ease;
+        }
+        .project-card:hover {
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .project-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .project-section {
+            margin-top: 30px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .file-details {
+            flex-grow: 1;
+        }
+        .file-actions {
+            white-space: nowrap;
+        }
+        .action-link {
+            margin-left: 10px;
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .action-link:hover {
+            text-decoration: underline;
+        }
+        .action-link.danger {
+            color: #dc3545;
+        }
+        .member-badge {
+            display: inline-block;
+            background-color: #0366d6;
+            color: white;
+            font-size: 0.8em;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 5px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .data-table th {
+            background-color: #f8f9fa;
+        }
+        .data-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        .checkbox-list {
+            list-style: none;
+            padding: 0;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        .checkbox-list li {
+            margin-bottom: 8px;
+        }
+        .back-link {
+            margin-top: 30px;
+        }
+        .file-description {
+            margin-top: 5px;
+            color: #333;
+        }
+        .file-project {
+            font-size: 0.9em;
+            color: #666;
+            margin-left: 10px;
+        }
+        .dashboard-section {
+            margin-bottom: 40px;
+        }
+        .view-all {
+            margin-top: 15px;
+            text-align: right;
+        }
+        .view-all a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .view-all a:hover {
+            text-decoration: underline;
+        }
+        .action-bar {
+            margin-bottom: 20px;
+        }
+        .form-actions {
+            margin-top: 20px;
+        }
+        .form-error {
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .confirmation-box {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="nav">
-        <h1>Veru</h1>
-    </div>
-    <div>
-        {% if user.is_authenticated %}
-            <a href="{% url 'file_list' %}">My Files</a>
-            <a href="{% url 'upload_file' %}">Upload</a>
-            {% if user.is_superuser %}
-                <a href="{% url 'invitation_list' %}">Manage Invitations</a>
+        <div>
+            <h1>Veru</h1>
+        </div>
+        <div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="{% url 'user_projects' %}">My Projects</a>
+                {% if user.is_superuser %}
+                    <a href="{% url 'project_list' %}">All Projects</a>
+                    <a href="{% url 'invitation_list' %}">Manage Invitations</a>
+                {% endif %}
+                <a href="{% url 'logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                <form id="logout-form" method="post" action="{% url 'logout' %}" style="display:none;">
+                    {% csrf_token %}
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
             {% endif %}
-            <form method="POST" action="{% url 'logout' %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" style="display:inline;">
-                    Logout
-                </button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}">Login</a>
-        {% endif %}
+        </div>
     </div>
-
+    
     <div class="content">
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </div>
 </body>
 </html>

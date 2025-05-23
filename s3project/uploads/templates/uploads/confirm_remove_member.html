@@ -1,0 +1,19 @@
+{% extends 'uploads/base.html' %}
+
+{% block title %}Remove Member{% endblock %}
+
+{% block content %}
+    <h2>Confirm Member Removal</h2>
+    
+    <div class="confirmation-box">
+        <p>Are you sure you want to remove <strong>{{ user_to_remove.get_full_name|default:user_to_remove.username }}</strong> from the project <strong>{{ project.name }}</strong>?</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="danger">Remove Member</button>
+            <a href="{% url 'manage_project_members' project.id %}">
+                <button type="button">Cancel</button>
+            </a>
+        </form>
+    </div>
+{% endblock %}

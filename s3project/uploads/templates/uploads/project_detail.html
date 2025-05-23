@@ -1,0 +1,111 @@
+{% extends 'uploads/base.html' %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block content %}
+    <div class="project-header">
+        <h2>{{ project.name }}</h2>
+        
+        {% if is_superuser %}
+            <div class="project-actions">
+                <a href="{% url 'edit_project' project.id %}">
+                    <button>Edit Project</button>
+                </a>
+                <a href="{% url 'manage_project_members' project.id %}">
+                    <button>Manage Members</button>
+                </a>
+                <a href="{% url 'delete_project' project.id %}">
+                    <button class="danger">Delete Project</button>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+    
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <div class="project-info">
+        <p><strong>Created by:</strong> {{ project.created_by.get_full_name|default:project.created_by.username }}</p>
+        <p><strong>Created on:</strong> {{ project.created_at|date:"F j, Y" }}</p>
+        
+        {% if project.description %}
+            <div class="project-description">
+                <h3>Description</h3>
+                <p>{{ project.description }}</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="project-section">
+        <div class="section-header">
+            <h3>Project Files</h3>
+            <a href="{% url 'upload_to_project' project.id %}">
+                <button>Upload File</button>
+            </a>
+        </div>
+        
+        {% if files %}
+            <div class="file-list">
+                {% for file in files %}
+                    <div class="file-item">
+                        <div class="file-details">
+                            <div class="file-title">
+                                <a href="{{ file.file.url }}" target="_blank">{{ file.title }}</a>
+                            </div>
+                            <div class="file-meta">
+                                Uploaded by {{ file.user.get_full_name|default:file.user.username }} 
+                                on {{ file.uploaded_at|date:"M d, Y" }}
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            {% if user.is_superuser or file.user == user %}
+                                <a href="{% url 'delete_file' file.id %}" class="action-link danger">
+                                    Delete
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No files have been uploaded to this project yet.</p>
+        {% endif %}
+    </div>
+    
+    <div class="project-section">
+        <h3>Project Members ({{ members.count }})</h3>
+        {% if members %}
+            <div class="member-list">
+                {% for membership in members %}
+                    <div class="member-item">
+                        <div class="member-name">
+                            {{ membership.user.get_full_name|default:membership.user.username }}
+                            {% if membership.user == project.created_by %}
+                                <span class="member-badge">Creator</span>
+                            {% endif %}
+                        </div>
+                        <div class="member-info">
+                            <span>Added on {{ membership.added_at|date:"M d, Y" }}</span>
+                            {% if membership.added_by != membership.user %}
+                                <span>by {{ membership.added_by.get_full_name|default:membership.added_by.username }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>This project has no members.</p>
+        {% endif %}
+    </div>
+    
+    <div class="back-link">
+        <a href="{% url 'dashboard' %}">
+            <button>Back to Dashboard</button>
+        </a>
+    </div>
+{% endblock %}
