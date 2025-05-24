@@ -34,3 +34,6 @@ poetry.lock
 # AWS credentials (if ever saved locally — strongly discouraged)
 *.pem
 .aws/
+
+# Tailwind
+tailwindcss
