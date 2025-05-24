@@ -90,7 +90,7 @@ class ProjectMembershipForm(forms.Form):
 class FileUploadForm(forms.ModelForm):
     class Meta:
         model = UploadedFile
-        fields = ['title', 'file']
+        fields = ['file']
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -105,4 +105,4 @@ class FileUploadForm(forms.ModelForm):
             instance.project = self.project
         if commit:
             instance.save()
-        return(instance)
+        return instance
